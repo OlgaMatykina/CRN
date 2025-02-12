@@ -4,11 +4,13 @@ from argparse import ArgumentParser
 
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks.model_summary import ModelSummary
+from pytorch_lightning.loggers import WandbLogger
 
 from callbacks.ema import EMACallback
 from utils.torch_dist import all_gather_object, synchronize
 
 from .base_exp import BEVDepthLightningModel
+
 
 
 def run_cli(model_class=BEVDepthLightningModel,
@@ -52,13 +54,16 @@ def run_cli(model_class=BEVDepthLightningModel,
         pl.seed_everything(args.seed)
 
     model = model_class(**vars(args))
+    wandb_logger = WandbLogger(project="CRN", name=exp_name)
     if use_ema:
         train_dataloader = model.train_dataloader()
         ema_callback = EMACallback(
             len(train_dataloader.dataset) * args.max_epochs)
-        trainer = pl.Trainer.from_argparse_args(args, callbacks=[ema_callback, ModelSummary(max_depth=3)])
+        # trainer = pl.Trainer.from_argparse_args(args, callbacks=[ema_callback, ModelSummary(max_depth=3)])
+        trainer = pl.Trainer.from_argparse_args(args, logger=wandb_logger, callbacks=[ema_callback, ModelSummary(max_depth=3)])
     else:
-        trainer = pl.Trainer.from_argparse_args(args, callbacks=[ModelSummary(max_depth=3)])
+        # trainer = pl.Trainer.from_argparse_args(args, callbacks=[ModelSummary(max_depth=3)])
+        trainer = pl.Trainer.from_argparse_args(args, logger=wandb_logger, callbacks=[ModelSummary(max_depth=3)])
     if args.evaluate:
         trainer.test(model, ckpt_path=args.ckpt_path)
     elif args.predict:

@@ -56,21 +56,21 @@ ln -s [nuscenes root] ./data/nuScenes/
 **Step 2.** Create annotation file. 
 This will generate `nuscenes_infos_{train,val}.pkl`.
 ```
-python scripts/gen_info.py
+python3 scripts/gen_info.py
 ```
 
 **Step 3.** Generate ground truth depth.  
 *Note: this process requires LiDAR keyframes.*
 ```
-python scripts/gen_depth_gt.py
+python3 scripts/gen_depth_gt.py
 ```
 
 **Step 4.** Generate radar point cloud in perspective view. 
 You can download pre-generated radar point cloud [here](https://kaistackr-my.sharepoint.com/:u:/g/personal/youngseok_kim_kaist_ac_kr/EcEoswDVWu9GpGV5NSwGme4BvIjOm-sGusZdCQRyMdVUtw?e=OpZoQ4).  
 *Note: this process requires radar blobs (in addition to keyframe) to utilize sweeps.*  
 ```
-python scripts/gen_radar_bev.py  # accumulate sweeps and transform to LiDAR coords
-python scripts/gen_radar_pv.py  # transform to camera coords
+python3 scripts/gen_radar_bev.py  # accumulate sweeps and transform to LiDAR coords
+python3 scripts/gen_radar_pv.py  # transform to camera coords
 ```
 
 The folder structure will be as follows:
@@ -93,12 +93,17 @@ CRN
 **Training**
 ```
 python [EXP_PATH] --amp_backend native -b 4 --gpus 4
+
+python3 ./exps/det/CRN_r18_256x704_128x128_4key.py --amp_backend native -b 2 --gpus 1
+python3 ./exps/det/CRNSBD_r18_256x704_128x128_4key.py --amp_backend native -b 2 --gpus 1
 ```
 
 **Evaluation**  
 *Note: use `-b 1 --gpus 1` to measure inference time.*
 ```
 python [EXP_PATH] --ckpt_path [CKPT_PATH] -e -b 4 --gpus 4
+
+python3 ./exps/det/CRN_r18_256x704_128x128_4key.py --ckpt_path ./weights/CRN_r18_256x704_128x128_4key.pth -e -b 1 --gpus 1
 ```
 
 ## Model Zoo

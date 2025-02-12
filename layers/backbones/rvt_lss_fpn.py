@@ -192,15 +192,15 @@ class RVTLSSFPN(BaseLSSFPN):
         # B x N x D x H x W x 3
         points = self.frustum
         ida_mat = ida_mat.view(batch_size, num_cams, 1, 1, 1, 4, 4)
-        points = ida_mat.inverse().matmul(points.unsqueeze(-1)).double()
+        points = ida_mat.cpu().inverse().cuda().matmul(points.unsqueeze(-1)).double()
         # cam_to_ego
         points = torch.cat(
             (points[:, :, :, :, :, :2] * points[:, :, :, :, :, 2:3],
              points[:, :, :, :, :, 2:]), 5)
 
-        combine = sensor2ego_mat.matmul(torch.inverse(intrin_mat)).double()
+        combine = sensor2ego_mat.matmul(torch.inverse(intrin_mat.cpu()).cuda()).double()
         points = combine.view(batch_size, num_cams, 1, 1, 1, 4,
-                              4).matmul(points).half()
+                              4).matmul(points).float()
         if bda_mat is not None:
             bda_mat = bda_mat.unsqueeze(1).repeat(1, num_cams, 1, 1).view(
                 batch_size, num_cams, 1, 1, 1, 4, 4)
@@ -308,10 +308,14 @@ class RVTLSSFPN(BaseLSSFPN):
             mats_dict.get('bda_mat', None))
 
         geom_xyz_valid = self._split_batch_cam(geom_xyz_valid, inv=True, num_cams=num_cams).unsqueeze(1)
+
+        print('img_feat_with_depth', img_feat_with_depth.shape)
+        print('geom_xyz_valid', geom_xyz_valid.shape)
+
         img_feat_with_depth = (img_feat_with_depth * geom_xyz_valid).sum(3).unsqueeze(3)
 
         if self.radar_view_transform:
-            radar_occupancy = pts_occupancy.permute(0, 2, 1, 3).contiguous()
+            radar_occupancy = pts_occupancy.permute(0, 2, 1, 3).contiguous().cuda()
             image_feature_collapsed = (image_feature * geom_xyz_valid.max(2).values).sum(2).unsqueeze(2)
             img_feat_with_radar = radar_occupancy.unsqueeze(1) * image_feature_collapsed.unsqueeze(2)
 

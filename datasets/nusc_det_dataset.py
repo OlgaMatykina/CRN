@@ -443,8 +443,7 @@ class NuscDatasetRadarDet(Dataset):
             radar_idx = self.sample_radar_augmentation()
 
             for sweep_idx, cam_info in enumerate(cam_infos):
-                img = Image.open(
-                    os.path.join(self.data_root, cam_info[cam]['filename']))
+                img = Image.open(os.path.join(self.data_root, cam_info[cam]['filename']))
 
                 w, x, y, z = cam_info[cam]['calibrated_sensor']['rotation']
                 # sweep sensor to sweep ego
@@ -503,6 +502,7 @@ class NuscDatasetRadarDet(Dataset):
                 intrin_mat[:3, :3] = torch.Tensor(
                     cam_info[cam]['calibrated_sensor']['camera_intrinsic'])
 
+                # print(cam_info[cam]['filename'])
                 file_name = os.path.split(cam_info[cam]['filename'])[-1]
                 if self.return_depth:
                     point_depth = np.fromfile(os.path.join(

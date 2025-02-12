@@ -1,0 +1,50 @@
+{
+  "os": "Linux-5.15.0-113-generic-x86_64-with-glibc2.29",
+  "python": "CPython 3.8.10",
+  "startedAt": "2025-02-12T07:35:10.828805Z",
+  "args": [
+    "--amp_backend",
+    "native",
+    "-b",
+    "2",
+    "--gpus",
+    "1"
+  ],
+  "program": "./exps/det/CRN_r18_256x704_128x128_4key.py",
+  "codePath": "exps/det/CRN_r18_256x704_128x128_4key.py",
+  "git": {
+    "remote": "https://github.com/youngskkim/CRN.git",
+    "commit": "5e9d2fa2f91c714b297e75ca666d27fc4ad0d13d"
+  },
+  "email": "omatykina@mail.ru",
+  "root": "/home/docker_crn/CRN",
+  "host": "d10752b64f1f",
+  "executable": "/usr/bin/python3",
+  "codePathLocal": "exps/det/CRN_r18_256x704_128x128_4key.py",
+  "cpu_count": 6,
+  "cpu_count_logical": 6,
+  "gpu": "NVIDIA GeForce RTX 4060 Ti",
+  "gpu_count": 1,
+  "disk": {
+    "/": {
+      "total": "234629738496",
+      "used": "195332235264"
+    }
+  },
+  "memory": {
+    "total": "16617238528"
+  },
+  "cpu": {
+    "count": 6,
+    "countLogical": 6
+  },
+  "gpu_nvidia": [
+    {
+      "name": "NVIDIA GeForce RTX 4060 Ti",
+      "memoryTotal": "17175674880",
+      "cudaCores": 4352,
+      "architecture": "Ada"
+    }
+  ],
+  "cudaVersion": "12.5"
+}
