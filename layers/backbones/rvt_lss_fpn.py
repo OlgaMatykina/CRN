@@ -309,8 +309,8 @@ class RVTLSSFPN(BaseLSSFPN):
 
         geom_xyz_valid = self._split_batch_cam(geom_xyz_valid, inv=True, num_cams=num_cams).unsqueeze(1)
 
-        print('img_feat_with_depth', img_feat_with_depth.shape)
-        print('geom_xyz_valid', geom_xyz_valid.shape)
+        # print('img_feat_with_depth', img_feat_with_depth.shape)
+        # print('geom_xyz_valid', geom_xyz_valid.shape)
 
         img_feat_with_depth = (img_feat_with_depth * geom_xyz_valid).sum(3).unsqueeze(3)
 

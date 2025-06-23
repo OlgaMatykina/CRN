@@ -42,7 +42,7 @@ cd mmdetection3d
 pip install -v -e .
 cd ..
 
-python setup.py develop  # GPU required
+python3 setup.py develop --prefix=/home/docker_crn/.local  # GPU required
 ```
 
 ### Data preparation
